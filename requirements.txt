@@ -1,0 +1,4 @@
+mysql-connector==2.2.9
+mysql-connector-python==8.2.0
+python-dotenv==1.0.0
+sense-hat==2.4.0
