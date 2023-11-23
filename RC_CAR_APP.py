@@ -177,7 +177,7 @@ def DC_phone():
     global Y
     lock.acquire()
 
-    speed = int(abs(Y - 125))
+    speed = max(int(abs(Y - 125)), 75)
     if Y < 125:  # 전진
         myMotor.setSpeed(speed * 2)
         myMotor.run(Raspi_MotorHAT.FORWARD)
