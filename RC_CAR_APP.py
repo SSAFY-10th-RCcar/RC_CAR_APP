@@ -156,7 +156,7 @@ def mqtt_subscriber(broker_address, topic):
         global X, Y
         command = message.payload.decode()
         X, Y = map(float, command.split())
-        print("X=", X, ", Y=", Y)
+        # print("X=", X, ", Y=", Y)
         if 95 <= X <= 155:
             X = 125
 
@@ -177,12 +177,13 @@ def DC_phone():
     global Y
     lock.acquire()
 
+    speed = int(abs(Y - 125))
     if Y < 125:  # 전진
-        myMotor.setSpeed(250)
-        myMotor.run(Raspi_MotorHAT.BACKWARD)
-    elif Y > 125:  # 후진
-        myMotor.setSpeed(250)
+        myMotor.setSpeed(speed * 2)
         myMotor.run(Raspi_MotorHAT.FORWARD)
+    elif Y > 125:  # 후진
+        myMotor.setSpeed(speed * 2)
+        myMotor.run(Raspi_MotorHAT.BACKWARD)
     elif Y == 125:
         myMotor.run(Raspi_MotorHAT.RELEASE)
 
@@ -197,12 +198,8 @@ def servo_phone():
     global X
     lock.acquire()
 
-    if X < 125:  # Left
-        pwm.setPWM(0, 0, 250)
-    elif X > 125:  # Right
-        pwm.setPWM(0, 0, 420)
-    elif X == 125:  # Middle
-        pwm.setPWM(0, 0, 355)
+    steer = 350 + ((X - 125) / 125) * 100
+    pwm.setPWM(0, 0, int(steer))
 
     lock.release()
 
